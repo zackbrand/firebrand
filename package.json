@@ -1,0 +1,23 @@
+{
+  "name": "Firebrand",
+  "version": "0.1.0",
+  "author": "Zack Brand",
+  "description": "Firebrand Testbase",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zackbrand/firebrand"
+  },
+  "dependencies": {
+    "watch": "latest",
+    "concurrently": "latest",
+    "node-sass": "latest",
+    "uglify-js": "latest"
+  },
+  "scripts": {
+    "watch:scss": "watch \"node-sass src/scss/master.scss public/css/main.css\" src/scss",
+    "watch:js": "watch \"uglifyjs src/js/*.js -o public/js/min.js\" src/js",
+    "watch:all": "concurrently \"npm run watch:scss\" \"npm run watch:js\""
+  },
+  "license": "UNLICENSED",
+  "private": "true"
+}
