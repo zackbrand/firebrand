@@ -8,13 +8,17 @@
     "watch": "latest",
     "node-sass": "latest",
     "uglify-js": "latest",
-    "light-server": "latest"
+    "light-server": "latest",
+    "imagemin-cli": "latest",
+    "copyfiles": "latest"
   },
   "scripts": {
     "watch:scss": "watch \"node-sass src/scss/master.scss public/css/main.css\" src/scss --interval=0.1",
     "watch:js": "watch \"uglifyjs src/js/*.js -o public/js/min.js\" src/js --interval=0.1",
+    "watch:img": "watch \"imagemin ./src/images/* --out-dir=./public/images\" src/images --interval=1",
+    "watch:html": "watch \"copyfiles -f ./src/html/*.html ./public/\" src/html --interval=0.1",
     "serve": "light-server -s ./public -p 7000 -w \"./public/** # echo reloaded\" --interval 100",
-    "start": "concurrently  \"npm run serve\" \"npm run watch:scss\" \"npm run watch:js\""
+    "start": "concurrently  \"npm run serve\" \"npm run watch:scss\" \"npm run watch:js\" \"npm run watch:img\" \"npm run watch:html\""
   },
   "license": "UNLICENSED",
   "private": "true"
