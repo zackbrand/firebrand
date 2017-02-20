@@ -3,17 +3,17 @@
   "version": "0.1.0",
   "author": "Zack Brand",
   "description": "Firebrand Testbase",
-  "dependencies": {
-    "light-server": "latest",
-    "watch": "latest",
+  "devDependencies": {
     "concurrently": "latest",
+    "watch": "latest",
     "node-sass": "latest",
-    "uglify-js": "latest"
+    "uglify-js": "latest",
+    "light-server": "latest"
   },
   "scripts": {
-    "watch:scss": "watch \"node-sass src/scss/master.scss public/css/main.css\" src/scss",
-    "watch:js": "watch \"uglifyjs src/js/*.js -o public/js/min.js\" src/js",
-    "serve": "light-server -s ./public -p 7000 -w \"./public/** # echo reloaded\" ",
+    "watch:scss": "watch \"node-sass src/scss/master.scss public/css/main.css\" src/scss --interval=0.1",
+    "watch:js": "watch \"uglifyjs src/js/*.js -o public/js/min.js\" src/js --interval=0.1",
+    "serve": "light-server -s ./public -p 7000 -w \"./public/** # echo reloaded\" --interval 100",
     "start": "concurrently  \"npm run serve\" \"npm run watch:scss\" \"npm run watch:js\""
   },
   "license": "UNLICENSED",
