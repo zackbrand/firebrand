@@ -18,6 +18,7 @@
     "watch:js": "watch \"uglifyjs src/js/*.js -o build/js/min.js\" src/js --interval=0.1",
     "watch:img": "watch \"imagemin ./src/images/* --out-dir=./build/images\" src/images --interval=1",
     "watch:html": "watch \"html-minifier --collapse-whitespace --conservative-collapse --input-dir ./src/html/ --output-dir ./build\" src/html --interval=0.1",
+    "uglify-sw": "uglifyjs src/sw.js -o build/sw.js && uglifyjs build/sw.js -o public/sw.js",
     "inline": "inliner ./build/index.html > ./public/index.html",
     "serve": "light-server -s ./build -p 7000 -w \"./build/** # echo reloaded\" --interval 100",
     "start": "concurrently  \"npm run serve\" \"npm run watch:scss\" \"npm run watch:js\" \"npm run watch:html\" \"npm run watch:img\" "
