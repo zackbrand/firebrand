@@ -11,17 +11,16 @@
     "light-server": "latest",
     "imagemin-cli": "latest",
     "html-minifier": "latest",
-    "html-inline": "latest"
+    "inliner": "latest"
   },
   "scripts": {
     "watch:scss": "watch \"node-sass --output-style compressed src/scss/master.scss build/css/min.css\" src/scss --interval=0.1",
     "watch:js": "watch \"uglifyjs src/js/*.js -o build/js/min.js\" src/js --interval=0.1",
     "watch:img": "watch \"imagemin ./src/images/* --out-dir=./build/images\" src/images --interval=1",
     "watch:html": "watch \"html-minifier --collapse-whitespace --conservative-collapse --input-dir ./src/html/ --output-dir ./build\" src/html --interval=0.1",
-    "watch:inline": "watch \"html-inline -i ./build/index.html -o ./public/index.html\" ./src --interval=0.1",
-    "inline": "html-inline -i ./build/index.html -o ./public/index.html",
+    "inline": "inliner ./build/index.html > ./public/index.html",
     "serve": "light-server -s ./build -p 7000 -w \"./build/** # echo reloaded\" --interval 100",
-    "start": "concurrently  \"npm run serve\" \"npm run watch:scss\" \"npm run watch:js\" \"npm run watch:html\""
+    "start": "concurrently  \"npm run serve\" \"npm run watch:scss\" \"npm run watch:js\" \"npm run watch:html\" \"npm run watch:img\" "
   },
   "license": "UNLICENSED",
   "private": "true"
