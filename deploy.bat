@@ -1,4 +1,2 @@
 @echo off
-  
-
-    C:\nodejs\firebrand deploy
+  firebase deploy
