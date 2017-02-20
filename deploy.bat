@@ -1,2 +1,5 @@
-@echo off
+@echo off 
+(
+  npm run inline
   firebase deploy
+)
