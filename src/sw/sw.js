@@ -1,41 +1,56 @@
 // Use unique cache name to allow for graceful updating
-const cacheVersion = "v1";
+const currentCache = "v1";
 
-// Install default cached files
 this.addEventListener('install', function(event) {
-  event.waitUntil(
-    caches.open(cacheVersion).then(function(cache) {
-      return cache.addAll([
-        '/'
-      ]);
-    })
-  );
+  event.waitUntil(initialCache());
 });
 
-// Cleanup old cache after new SW is activated
 this.addEventListener('activate', function(event) {
-  const cacheWhitelist = [cacheVersion];
-  event.waitUntil(
-    caches.keys().then(function(keyList) {
-      return Promise.all(keyList.map(function(key) {
-        if (cacheWhitelist.indexOf(key) === -1) {
-          return caches.delete(key);
-        }
-      }));
-    })
-  );
+  event.waitUntil(cleanCache());
 });
 
-// Intercept asset requests, check cache first, then check network
 this.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request).then(function(resp) {
-      return resp || fetch(event.request).then(function(response) {
-        return caches.open(cacheVersion).then(function(cache) {
-          cache.put(event.request, response.clone());
-          return response;
-        });  
-      });
-    })
-  );
+
+  // Intercept asset requests
+    event.respondWith(
+
+      // Check against cache first
+      caches.match(event.request).then(function(resp) {
+        console.log("fetching from cache"); 
+        return resp;
+
+      || // If that isnt truthy 
+
+      // Then fetch from the network
+        fetch(event.request).then(function(response) {
+          console.log("caching found content");
+          return caches.open(currentCache).then(function(cache) {
+            // Add newly found content to the cache
+            cache.put(event.request, response.clone());
+            return response;
+          });  
+        });
+      })
+
+    ); // End respondWith
+
 });
+
+function initialCache() {
+  caches.open(currentCache).then(function(cache) {
+    console.log("initial caching");
+    return cache.addAll(['/']);
+  })
+}
+
+function cleanCache() {
+  const cacheWhitelist = [currentCache];
+  caches.keys().then(function(keyList) {
+    return Promise.all(keyList.map(function(key) {
+      if (cacheWhitelist.indexOf(key) === -1) {
+        console.log("deleting old cache");
+        return caches.delete(key);
+      }
+    }));
+  })
+}
