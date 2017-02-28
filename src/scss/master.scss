@@ -1,4 +1,5 @@
 $firegrey: #ECEFF1;
+$firered: #e50303;
 $mainFonts: Roboto, Arial, sans-serif;
 
 body {
@@ -40,7 +41,7 @@ a {
     text-transform: uppercase;
     text-decoration: none;
     font-weight: 500;
-    background: rgb(3,155,229);
+    background: $firered;
     color: white;
     border: 1px solid rgb(3,155,229);
     border-radius: 3px;
