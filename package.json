@@ -7,16 +7,16 @@
     "concurrently": "latest",
     "watch": "latest",
     "node-sass": "latest",
-    "uglify-js": "latest",
     "light-server": "latest",
     "imagemin-cli": "latest",
     "html-minifier": "latest",
     "cpy-cli": "latest",
-    "inliner": "latest"
+    "inliner": "latest",
+    "babel-cli": "latest"
   },
   "scripts": {
     "watch:scss": "watch \"node-sass --output-style compressed src/scss/master.scss build/css/min.css\" src/scss --interval=0.1",
-    "watch:js": "watch \"uglifyjs src/js/*.js -o build/js/min.js\" src/js --interval=0.1",
+    "watch:js": "watch \"babel src/js/*.js -o build/js/min.js\" src/js --interval=0.1",
     "watch:img": "watch \"imagemin ./src/images/* --out-dir=./build/images/ && imagemin ./src/images/icons/* --out-dir=./build/images/icons/ && imagemin ./src/images/icons/* --out-dir=./public/images/icons/\" src/images --interval=1",
     "watch:html": "watch \"html-minifier --collapse-whitespace --conservative-collapse --input-dir ./src/html/ --output-dir ./build\" src/html --interval=0.1",
     "watch:sw": "watch \"uglifyjs src/sw/sw.js -o build/sw.js && uglifyjs src/sw/sw.js -o public/sw.js\" src/sw --interval=0.1",

@@ -1,13 +1,71 @@
 
-// Register service worker
-if ('serviceWorker' in navigator) {
-  console.log('Registering service worker');
-  navigator.serviceWorker.register('/sw.js', {scope: '/'})
-  .then(function(reg) {
-    // registration worked
-    console.log('Registration succeeded. Scope is ' + reg.scope);
-  }).catch(function(error) {
-    // registration failed
-    console.log('Registration failed with ' + error);
-  });
-}
+// Instantiate classes
+let SW  = new SERVICEWORKER;
+let CL  = new CEELO;
+
+// Once DOM has loaded
+document.addEventListener("DOMContentLoaded", function(event) { 
+
+  // SW Status ///////////////////////////////////////////////
+
+    if ('serviceWorker' in navigator) {
+
+      // Setup
+      SW.registered = document.querySelector(".sw-status__registered");
+      SW.cache      = document.querySelector(".sw-status__cache");
+      SW.controlled = document.querySelector(".sw-status__controlled");
+      SW.register   = document.querySelector(".sw-status__register");
+      SW.unregister = document.querySelector(".sw-status__unregister");
+      SW.install    = document.querySelector(".sw-status__install");
+      SW.delete     = document.querySelector(".sw-status__delete");
+
+      SW.checkRegistration();
+      console.log(SW.swRegistered);
+      SW.controlled.textContent = "Controlled: "+navigator.serviceWorker.controller;
+
+      SW.checkCache();
+
+      // Install service worker when button is clicked 
+      SW.register.addEventListener('click', function() {
+        SW.registerSW();
+      }, false); // false disables default click behavior
+
+      // Install service worker when button is clicked 
+      SW.unregister.addEventListener('click', function() {
+        SW.unregisterSW();
+      }, false); // false disables default click behavior
+
+      // Install service worker when button is clicked 
+      SW.install.addEventListener('click', function() {
+        SW.installCache();
+      }, false); // false disables default click behavior
+
+      // Install service worker when button is clicked 
+      SW.delete.addEventListener('click', function() {
+        SW.deleteCache();
+      }, false); // false disables default click behavior
+
+    } else {
+      alert("Service Workers not supported!");
+    } // End if ('serviceWorker' in navigator)
+
+  ////////////////////////////////////////////////////////////
+
+  // Cee-lo //////////////////////////////////////////////////
+    // Setup
+    CL.setPoint = document.querySelector(".set-point");
+    CL.dice     = document.querySelector(".dice");
+    CL.roll     = document.querySelector(".roll");
+
+    CL.createDice();
+    CL.allDice  = document.getElementsByClassName("dice__die");
+
+    // Roll dice when button is clicked 
+    CL.roll.addEventListener('click', function() {
+      CL.rollResults          = CL.rollDice();
+      CL.matches              = CL.findMatches();
+      CL.setPoint.textContent = CL.determineResults();
+    }, false); // false disables default click behavior
+  ////////////////////////////////////////////////////////////
+
+});

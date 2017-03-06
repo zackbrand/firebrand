@@ -10,7 +10,7 @@
       <!-- Set Title --> 
       <title>Welcome to Firebrand</title>
 
-    <!-- External Assets-->
+    <!-- External Assets -->
 
       <!-- Set the fav icon --> 
       <link rel="shortcut icon" type="image/x-icon" href="images/icons/favicon.png">
@@ -26,7 +26,7 @@
       <!-- Define the web app manifest -->  
       <link rel="manifest" href="/manifest.json">
 
-      <!-- Set the viewport. -->  
+      <!-- Set the viewport -->  
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, minimum-scale=1.0">
 
       <!-- Set the theme color -->  
@@ -49,13 +49,38 @@
   </head>
 
   <body>
-    <div class="message">
-      <h1>Welcome to Firebase Hosting</h1>
+
+    <section class="sw-status message">
+      <h2>Service Worker Status</h2>
+      <div class="sw-status__registered">Registered:</div>
+      <div class="sw-status__controlled">Controlled:</div>
+      <div class="sw-status__cache">Cache:</div>
+      <ul>
+        <li><a class="sw-status__register" href="#">Register Service Worker</a></li>
+        <li><a class="sw-status__unregister" href="#">Unregister Service Worker</a></li>
+        <li><a class="sw-status__install" href="#">Install Cache</a></li>
+        <li><a class="sw-status__delete" href="#">Delete Cache</a></li>
+      </ul>
+
+    </section>
+
+    <section class="cee-lo message">
+      <h2>Cee-lo</h2>
+      <div class="dice"></div>
+      <br>
+      <a class="roll" href="#">Roll</a>
+      <div class="set-point">SP</div>
+    </section>
+
+    <section class="message">
+      <h2>Welcome to Firebase Hosting</h2>
       <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
       <ul>
         <li><a rel="noopener" target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a></li>
       </ul>
-    </div>
+    </section>
+
+  </div>
   </body>
   
 </html>
