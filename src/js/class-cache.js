@@ -1,7 +1,5 @@
 class CACHE {
   constructor() {
-    this.path = '/sw.js';
-    this.scope = '/';
     this.currentCache = "v1";
     this.cached  = false;
   }
@@ -27,7 +25,6 @@ class CACHE {
     caches.open(Cache.currentCache).then(function(cache) {
       console.log("SW: Installing initial cache");
       cache.addAll(filesToCache);
-      setTimeout((function(){location.reload()}), 200); // update to promise
     })
   }
   deleteCache() {
@@ -35,7 +32,6 @@ class CACHE {
     caches.open(Cache.currentCache).then(function(cache) {
       cache.delete('/').then(function(response) {
         console.log('Cache deleted');
-        setTimeout((function(){location.reload()}), 200); // update to promise
       });
     }).catch(function(error) {
       console.log('Cache delete failed' + error);

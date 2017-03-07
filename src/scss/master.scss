@@ -50,11 +50,13 @@ a {
     font-size: 14px;
     box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
   }
-  .cache-status__install--false {
+  .cache-status__install--false, 
+  .sw-status__registered--false {
     background: $firered;
   }
 
-  .cache-status__install--true {
+  .cache-status__install--true,
+  .sw-status__registered--true {
     background: green;
   }
 }

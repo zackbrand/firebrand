@@ -1,7 +1,5 @@
 class CACHE {
   constructor() {
-    this.path = '/sw.js';
-    this.scope = '/';
     this.currentCache = "v1";
     this.cached = false;
   }
@@ -23,9 +21,6 @@ class CACHE {
     caches.open(Cache.currentCache).then(function (cache) {
       console.log("SW: Installing initial cache");
       cache.addAll(filesToCache);
-      setTimeout(function () {
-        location.reload();
-      }, 200);
     });
   }
   deleteCache() {
@@ -33,9 +28,6 @@ class CACHE {
     caches.open(Cache.currentCache).then(function (cache) {
       cache.delete('/').then(function (response) {
         console.log('Cache deleted');
-        setTimeout(function () {
-          location.reload();
-        }, 200);
       });
     }).catch(function (error) {
       console.log('Cache delete failed' + error);
@@ -133,28 +125,31 @@ class SERVICEWORKER {
   constructor() {
     this.path = '/sw.js';
     this.scope = '/';
-    this.swRegistered = false;
+    this.registered = false;
     this.swControlled = false;
+  }
+  checkRegistration() {
+    navigator.serviceWorker.getRegistration().then(function (reg) {
+      if (reg) {
+        console.log('Service worker registration confirmed');
+        SW.register_button.classList.add("sw-status__registered--true");
+        SW.register_button.textContent = "Registered";
+        SW.registered = true;
+      } else {
+        console.log('No service worker registered');
+        SW.register_button.classList.add("sw-status__registered--false");
+        SW.register_button.textContent = "Unregistered";
+        SW.registered = false;
+      }
+    }).catch(function (error) {
+      console.log('Check registration promise error: ' + error);
+    });
   }
   registerSW() {
     navigator.serviceWorker.register(SW.path, { scope: SW.scope }).then(function (sw) {
       console.log('Registration succeeded. Scope is ' + sw.scope);
     }).catch(function (error) {
       console.log('Registration failed with ' + error);
-    });
-  }
-  checkRegistration() {
-    navigator.serviceWorker.getRegistration().then(function (reg) {
-      if (reg) {
-        console.log('Service worker registration confirmed');
-        SW.swRegistered = true;
-      } else {
-        console.log('No service worker registered');
-        SW.swRegistered = false;
-      }
-      SW.registered.textContent = "Registered: " + SW.swRegistered;
-    }).catch(function (error) {
-      console.log('Check registration promise error: ' + error);
     });
   }
   unregisterSW() {
@@ -176,24 +171,26 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   if ('serviceWorker' in navigator) {
 
-    SW.registered = document.querySelector(".sw-status__registered");
     SW.controlled = document.querySelector(".sw-status__controlled");
-    SW.register = document.querySelector(".sw-status__register");
+    SW.register_button = document.querySelector(".sw-status__register-button");
     SW.unregister = document.querySelector(".sw-status__unregister");
     SW.checkRegistration();
     SW.controlled.textContent = "Controlled: " + navigator.serviceWorker.controller;
 
-    SW.register.addEventListener('click', function () {
-      SW.registerSW();
-    }, false);
-    SW.unregister.addEventListener('click', function () {
-      SW.unregisterSW();
+    SW.register_button.addEventListener('click', function () {
+      if (!SW.registered) {
+        SW.registerSW();
+      } else {
+        SW.unregisterSW();
+      }
+      setTimeout(function () {
+        location.reload();
+      }, 200);
     }, false);
   } else {
     alert("Service Workers not supported!");
   }
 
-  Cache.cache_button = document.querySelector(".cache-status__cache");
   Cache.install_button = document.querySelector(".cache-status__install-button");
 
   Cache.checkCache();
@@ -204,6 +201,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
     } else {
       Cache.deleteCache();
     }
+    setTimeout(function () {
+      location.reload();
+    }, 200);
   }, false);
   CL.setPoint = document.querySelector(".set-point");
   CL.dice = document.querySelector(".dice");

@@ -11,21 +11,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     if ('serviceWorker' in navigator) {
 
-      SW.registered = document.querySelector(".sw-status__registered");
       SW.controlled = document.querySelector(".sw-status__controlled");
-      SW.register   = document.querySelector(".sw-status__register");
+      SW.register_button   = document.querySelector(".sw-status__register-button");
       SW.unregister = document.querySelector(".sw-status__unregister");
       SW.checkRegistration();
       SW.controlled.textContent = "Controlled: "+navigator.serviceWorker.controller;
 
       // Install service worker when button is clicked 
-      SW.register.addEventListener('click', function() {
-        SW.registerSW();
-      }, false); // false disables default click behavior
-
-      // Install service worker when button is clicked 
-      SW.unregister.addEventListener('click', function() {
-        SW.unregisterSW();
+      SW.register_button.addEventListener('click', function() {
+        if (!SW.registered) {
+          SW.registerSW();
+        } else {
+          SW.unregisterSW();
+        }
+        setTimeout((function(){location.reload()}), 200); // update to promise
       }, false); // false disables default click behavior
 
     } else {
@@ -34,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // Cache ////////////////////////////////////////////////////////
 
-    Cache.cache_button = document.querySelector(".cache-status__cache");
     Cache.install_button = document.querySelector(".cache-status__install-button");
 
     Cache.checkCache();
@@ -46,6 +44,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       } else {
         Cache.deleteCache();
       }
+      setTimeout((function(){location.reload()}), 200); // update to promise
     }, false); // false disables default click behavior
 
   // Cee-lo ///////////////////////////////////////////////////////
