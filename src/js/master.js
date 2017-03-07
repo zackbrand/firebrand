@@ -1,4 +1,3 @@
-
 // Instantiate classes
 let SW    = new SERVICEWORKER;
 let Cache = new CACHE;

@@ -19,12 +19,14 @@ a {
 
 
 .message {
-  max-width: 400px;
+  width: 300px;
+  max-width: 80%;
   margin: 40px auto;
   box-shadow: 0 1px 3px 0 rgba(0,0,0,0.2),0 1px 1px 0 rgba(0,0,0,0.14),0 2px 1px -1px rgba(0,0,0,0.12);
   border-radius: 2px;
   background: white;
   padding: 16px 24px;
+  text-align: center;
   & h2 {
     font-size: 22px;
     font-weight: 500;
@@ -74,7 +76,7 @@ body {
 .cee-lo {
 }
 .dice {
-  border: 1px solid black;
+  border: 2px dashed #ab9d9d;
   padding: 5px;
   border-radius: 2px;
   display: inline-block;
@@ -104,8 +106,7 @@ body {
   margin: 0 0 5px 0;
   padding: 5px;
   text-decoration: none;
-  font-weight: bold;
-  color: black;
-  background: salmon;
+  color: white;
+  background: $firered;
   border-radius: 2px;
 }

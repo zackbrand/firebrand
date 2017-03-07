@@ -130,12 +130,10 @@ class SERVICEWORKER {
   checkRegistration() {
     navigator.serviceWorker.getRegistration().then(function (reg) {
       if (reg) {
-        console.log('Service worker registration confirmed');
         SW.register_button.classList.add("sw-status__registered--true");
         SW.register_button.textContent = "Registered";
         SW.registered = true;
       } else {
-        console.log('No service worker registered');
         SW.register_button.classList.add("sw-status__registered--false");
         SW.register_button.textContent = "Unregistered";
         SW.registered = false;
