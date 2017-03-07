@@ -4,7 +4,7 @@ class CACHE {
     this.cached  = false;
     this.install_button = "";
   }
-  checkCache () {
+  check () {
     // Check against cache first
     caches.match('/').then(function(resp) {
       if (resp) {
@@ -18,7 +18,7 @@ class CACHE {
       }
     })
   }
-  installCache() {
+  install() {
     const filesToCache = [
       '/'
     ]
@@ -28,8 +28,7 @@ class CACHE {
       });
     })
   }
-  deleteCache() {
-    console.log('Trying to delete cache');
+  delete() {
     caches.open(Cache.currentCache).then(function(cache) {
       cache.delete('/').then(function(response) {
         location.reload();
@@ -38,7 +37,7 @@ class CACHE {
       console.log('Cache delete failed' + error);
     });
   }
-  cleanCache() {
+  clean() {
     const cacheWhitelist = [currentCache];
     caches.keys().then(function(keyList) {
       return Promise.all(keyList.map(function(key) {
@@ -49,7 +48,7 @@ class CACHE {
       }));
     })
   }
-  fetchCache() {
+  fetch() {
     // Intercept asset requests
     event.respondWith(
 

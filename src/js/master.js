@@ -25,15 +25,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
     } // End if ('serviceWorker' in navigator)
 
   // Cache ////////////////////////////////////////////////////////
-    
-    // Setup
+   
+     // Setup
     Cache.install_button = document.querySelector(".cache-status__install-button");
-    Cache.checkCache();
+    Cache.check();
 
     // Install service worker when button is clicked 
     Cache.install_button.addEventListener('click', function() {
-      if (!Cache.cached) Cache.installCache();
-      else Cache.deleteCache();
+      if (!Cache.cached) Cache.install();
+      else Cache.delete();
     }, false); // false disables default click behavior
 
   // Cee-lo ///////////////////////////////////////////////////////

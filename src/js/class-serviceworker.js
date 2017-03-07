@@ -27,7 +27,6 @@ class SERVICEWORKER {
   }
   register() {
     navigator.serviceWorker.register(SW.path, {scope: SW.scope}).then(function(sw){
-      console.log('Registration succeeded. Scope is ' + sw.scope);
       location.reload();
     }).catch(function(error) {
       console.log('Registration failed with ' + error);
@@ -36,7 +35,6 @@ class SERVICEWORKER {
   unregister() {
     navigator.serviceWorker.register(SW.path,{scope: SW.scope}).then(function(sw){
       sw.unregister().then(function(){
-        console.log('Service Worker unregistered');
         location.reload();
       });
     }).catch(function(error) {

@@ -4,7 +4,7 @@ class CACHE {
     this.cached = false;
     this.install_button = "";
   }
-  checkCache() {
+  check() {
     caches.match('/').then(function (resp) {
       if (resp) {
         Cache.install_button.classList.add("cache-status__install--true");
@@ -17,7 +17,7 @@ class CACHE {
       }
     });
   }
-  installCache() {
+  install() {
     const filesToCache = ['/'];
     caches.open(Cache.currentCache).then(function (cache) {
       cache.addAll(filesToCache).then(function () {
@@ -25,8 +25,7 @@ class CACHE {
       });
     });
   }
-  deleteCache() {
-    console.log('Trying to delete cache');
+  delete() {
     caches.open(Cache.currentCache).then(function (cache) {
       cache.delete('/').then(function (response) {
         location.reload();
@@ -35,7 +34,7 @@ class CACHE {
       console.log('Cache delete failed' + error);
     });
   }
-  cleanCache() {
+  clean() {
     const cacheWhitelist = [currentCache];
     caches.keys().then(function (keyList) {
       return Promise.all(keyList.map(function (key) {
@@ -45,7 +44,7 @@ class CACHE {
       }));
     });
   }
-  fetchCache() {
+  fetch() {
     event.respondWith(caches.match(event.request).then(function (resp) {
 
       if (resp) console.log("SW: Resource loaded from cache");
@@ -152,7 +151,6 @@ class SERVICEWORKER {
   }
   register() {
     navigator.serviceWorker.register(SW.path, { scope: SW.scope }).then(function (sw) {
-      console.log('Registration succeeded. Scope is ' + sw.scope);
       location.reload();
     }).catch(function (error) {
       console.log('Registration failed with ' + error);
@@ -161,7 +159,6 @@ class SERVICEWORKER {
   unregister() {
     navigator.serviceWorker.register(SW.path, { scope: SW.scope }).then(function (sw) {
       sw.unregister().then(function () {
-        console.log('Service Worker unregistered');
         location.reload();
       });
     }).catch(function (error) {
@@ -187,10 +184,10 @@ document.addEventListener("DOMContentLoaded", function (event) {
     alert("Service Workers not supported!");
   }
   Cache.install_button = document.querySelector(".cache-status__install-button");
-  Cache.checkCache();
+  Cache.check();
 
   Cache.install_button.addEventListener('click', function () {
-    if (!Cache.cached) Cache.installCache();else Cache.deleteCache();
+    if (!Cache.cached) Cache.install();else Cache.delete();
   }, false);
   CL.setPoint = document.querySelector(".set-point");
   CL.dice = document.querySelector(".dice");
