@@ -1,3 +1,65 @@
+class CACHE {
+  constructor() {
+    this.path = '/sw.js';
+    this.scope = '/';
+    this.currentCache = "v1";
+    this.swCache = false;
+    this.swInstall = "";
+  }
+  installCache() {
+    const filesToCache = ['/'];
+    caches.open(Cache.currentCache).then(function (cache) {
+      console.log("SW: Installing initial cache");
+      return cache.addAll(filesToCache);
+    });
+  }
+  checkCache() {
+    caches.match('/').then(function (resp) {
+      console.log(resp);
+      if (resp) {
+        console.log("Cache True");
+        Cache.cache.textContent = "Cache: matched";
+      } else {
+        console.log("Cache False");
+        Cache.cache.textContent = "Cache: false";
+      }
+    });
+  }
+  deleteCache() {
+    console.log('Trying to delete cache');
+    caches.open(Cache.currentCache).then(function (cache) {
+      cache.delete('/').then(function (response) {
+        console.log('Cache deleted');
+      });
+    }).catch(function (error) {
+      console.log('Cache delete failed' + error);
+    });
+  }
+  cleanCache() {
+    const cacheWhitelist = [currentCache];
+    caches.keys().then(function (keyList) {
+      return Promise.all(keyList.map(function (key) {
+        if (cacheWhitelist.indexOf(key) === -1) {
+          console.log("SW: Deleting old cache");
+          return caches.delete(key);
+        }
+      }));
+    });
+  }
+  fetchCache() {
+    event.respondWith(caches.match(event.request).then(function (resp) {
+
+      if (resp) console.log("SW: Resource loaded from cache");
+      return resp || fetch(event.request).then(function (response) {
+        console.log("SW: Requested resource not yet cached, caching now");
+        return caches.open(currentCache).then(function (cache) {
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      });
+    }));
+  }
+}
 class CEELO {
   constructor() {
     this.rollResults = "";
@@ -66,11 +128,8 @@ class SERVICEWORKER {
   constructor() {
     this.path = '/sw.js';
     this.scope = '/';
-    this.currentCache = "v1";
     this.swRegistered = false;
-    this.swCache = false;
     this.swControlled = false;
-    this.swInstall = "";
   }
   registerSW() {
     navigator.serviceWorker.register(SW.path, { scope: SW.scope }).then(function (sw) {
@@ -102,106 +161,56 @@ class SERVICEWORKER {
       console.log('Registration failed with ' + error);
     });
   }
-  installCache() {
-    const filesToCache = ['/'];
-    caches.open(SW.currentCache).then(function (cache) {
-      console.log("SW: Installing initial cache");
-      return cache.addAll(filesToCache);
-    });
-  }
-  checkCache() {
-    caches.match('/').then(function (resp) {
-      console.log(resp);
-      if (resp) {
-        console.log("Cache True");
-        SW.cache.textContent = "Cache: matched";
-      } else {
-        console.log("Cache False");
-        SW.cache.textContent = "Cache: false";
-      }
-    });
-  }
-  deleteCache() {
-    console.log('Trying to delete cache');
-    caches.open(SW.currentCache).then(function (cache) {
-      cache.delete('/').then(function (response) {
-        console.log('Cache deleted');
-      });
-    }).catch(function (error) {
-      console.log('Cache delete failed' + error);
-    });
-  }
-  cleanCache() {
-    const cacheWhitelist = [currentCache];
-    caches.keys().then(function (keyList) {
-      return Promise.all(keyList.map(function (key) {
-        if (cacheWhitelist.indexOf(key) === -1) {
-          console.log("SW: Deleting old cache");
-          return caches.delete(key);
-        }
-      }));
-    });
-  }
-  fetchCache() {
-    event.respondWith(caches.match(event.request).then(function (resp) {
-
-      if (resp) console.log("SW: Resource loaded from cache");
-      return resp || fetch(event.request).then(function (response) {
-        console.log("SW: Requested resource not yet cached, caching now");
-        return caches.open(currentCache).then(function (cache) {
-          cache.put(event.request, response.clone());
-          return response;
-        });
-      });
-    }));
-  }
 }
 
 let SW = new SERVICEWORKER();
+let Cache = new CACHE();
 let CL = new CEELO();
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
-  if ('serviceWorker' in navigator) {
-    SW.registered = document.querySelector(".sw-status__registered");
-    SW.cache = document.querySelector(".sw-status__cache");
-    SW.controlled = document.querySelector(".sw-status__controlled");
-    SW.register = document.querySelector(".sw-status__register");
-    SW.unregister = document.querySelector(".sw-status__unregister");
-    SW.install = document.querySelector(".sw-status__install");
-    SW.delete = document.querySelector(".sw-status__delete");
+    if ('serviceWorker' in navigator) {
+        SW.registered = document.querySelector(".sw-status__registered");
+        SW.controlled = document.querySelector(".sw-status__controlled");
+        SW.register = document.querySelector(".sw-status__register");
+        SW.unregister = document.querySelector(".sw-status__unregister");
 
-    SW.checkRegistration();
-    console.log(SW.swRegistered);
-    SW.controlled.textContent = "Controlled: " + navigator.serviceWorker.controller;
+        SW.checkRegistration();
+        console.log(SW.swRegistered);
+        SW.controlled.textContent = "Controlled: " + navigator.serviceWorker.controller;
 
-    SW.checkCache();
+        SW.register.addEventListener('click', function () {
+            SW.registerSW();
+        }, false);
+        SW.unregister.addEventListener('click', function () {
+            SW.unregisterSW();
+        }, false);
+    } else {
+        alert("Service Workers not supported!");
+    }
 
-    SW.register.addEventListener('click', function () {
-      SW.registerSW();
+    Cache.cache = document.querySelector(".cache-status__cache");
+    Cache.install = document.querySelector(".cache-status__install");
+    Cache.delete = document.querySelector(".cache-status__delete");
+
+    Cache.checkCache();
+
+    Cache.install.addEventListener('click', function () {
+        Cache.installCache();
     }, false);
-    SW.unregister.addEventListener('click', function () {
-      SW.unregisterSW();
+    Cache.delete.addEventListener('click', function () {
+        Cache.deleteCache();
     }, false);
-    SW.install.addEventListener('click', function () {
-      SW.installCache();
-    }, false);
-    SW.delete.addEventListener('click', function () {
-      SW.deleteCache();
-    }, false);
-  } else {
-    alert("Service Workers not supported!");
-  }
-  CL.setPoint = document.querySelector(".set-point");
-  CL.dice = document.querySelector(".dice");
-  CL.roll = document.querySelector(".roll");
+    CL.setPoint = document.querySelector(".set-point");
+    CL.dice = document.querySelector(".dice");
+    CL.roll = document.querySelector(".roll");
 
-  CL.createDice();
-  CL.allDice = document.getElementsByClassName("dice__die");
+    CL.createDice();
+    CL.allDice = document.getElementsByClassName("dice__die");
 
-  CL.roll.addEventListener('click', function () {
-    CL.rollResults = CL.rollDice();
-    CL.matches = CL.findMatches();
-    CL.setPoint.textContent = CL.determineResults();
-  }, false);
+    CL.roll.addEventListener('click', function () {
+        CL.rollResults = CL.rollDice();
+        CL.matches = CL.findMatches();
+        CL.setPoint.textContent = CL.determineResults();
+    }, false);
 });

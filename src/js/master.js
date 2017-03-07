@@ -1,29 +1,25 @@
 
 // Instantiate classes
-let SW  = new SERVICEWORKER;
-let CL  = new CEELO;
+let SW    = new SERVICEWORKER;
+let Cache = new CACHE;
+let CL    = new CEELO;
 
 // Once DOM has loaded
 document.addEventListener("DOMContentLoaded", function(event) { 
 
-  // SW Status ///////////////////////////////////////////////
+  // Service Worker ///////////////////////////////////////////////
 
     if ('serviceWorker' in navigator) {
 
       // Setup
       SW.registered = document.querySelector(".sw-status__registered");
-      SW.cache      = document.querySelector(".sw-status__cache");
       SW.controlled = document.querySelector(".sw-status__controlled");
       SW.register   = document.querySelector(".sw-status__register");
       SW.unregister = document.querySelector(".sw-status__unregister");
-      SW.install    = document.querySelector(".sw-status__install");
-      SW.delete     = document.querySelector(".sw-status__delete");
 
       SW.checkRegistration();
       console.log(SW.swRegistered);
       SW.controlled.textContent = "Controlled: "+navigator.serviceWorker.controller;
-
-      SW.checkCache();
 
       // Install service worker when button is clicked 
       SW.register.addEventListener('click', function() {
@@ -35,23 +31,30 @@ document.addEventListener("DOMContentLoaded", function(event) {
         SW.unregisterSW();
       }, false); // false disables default click behavior
 
-      // Install service worker when button is clicked 
-      SW.install.addEventListener('click', function() {
-        SW.installCache();
-      }, false); // false disables default click behavior
-
-      // Install service worker when button is clicked 
-      SW.delete.addEventListener('click', function() {
-        SW.deleteCache();
-      }, false); // false disables default click behavior
-
     } else {
       alert("Service Workers not supported!");
     } // End if ('serviceWorker' in navigator)
 
-  ////////////////////////////////////////////////////////////
+  // Cache ////////////////////////////////////////////////////////
 
-  // Cee-lo //////////////////////////////////////////////////
+    Cache.cache   = document.querySelector(".cache-status__cache");
+    Cache.install = document.querySelector(".cache-status__install");
+    Cache.delete  = document.querySelector(".cache-status__delete");
+
+    Cache.checkCache();
+
+    // Install service worker when button is clicked 
+    Cache.install.addEventListener('click', function() {
+      Cache.installCache();
+    }, false); // false disables default click behavior
+
+    // Install service worker when button is clicked 
+    Cache.delete.addEventListener('click', function() {
+      Cache.deleteCache();
+    }, false); // false disables default click behavior
+
+  // Cee-lo ///////////////////////////////////////////////////////
+
     // Setup
     CL.setPoint = document.querySelector(".set-point");
     CL.dice     = document.querySelector(".dice");
@@ -66,6 +69,5 @@ document.addEventListener("DOMContentLoaded", function(event) {
       CL.matches              = CL.findMatches();
       CL.setPoint.textContent = CL.determineResults();
     }, false); // false disables default click behavior
-  ////////////////////////////////////////////////////////////
 
 });
