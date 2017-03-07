@@ -7,20 +7,17 @@ let CL    = new CEELO;
 document.addEventListener("DOMContentLoaded", function(event) { 
 
   // Service Worker ///////////////////////////////////////////////
-
     if ('serviceWorker' in navigator) {
 
-      SW.register_button   = document.querySelector(".sw-status__register-button");
+      // Setup
+      SW.register_button = document.querySelector(".sw-status__register-button");
       SW.checkRegistration();
       SW.checkControl();
+      
       // Register / unregister service worker when button is clicked 
       SW.register_button.addEventListener('click', function() {
-        if (!SW.registered) {
-          SW.registerSW();
-        } else {
-          SW.unregisterSW();
-        }
-        setTimeout((function(){location.reload()}), 200); // update to promise
+        if (!SW.registered) SW.register();
+        else SW.unregister();
       }, false); // false disables default click behavior
 
     } else {
@@ -28,19 +25,15 @@ document.addEventListener("DOMContentLoaded", function(event) {
     } // End if ('serviceWorker' in navigator)
 
   // Cache ////////////////////////////////////////////////////////
-
+    
+    // Setup
     Cache.install_button = document.querySelector(".cache-status__install-button");
-
     Cache.checkCache();
 
     // Install service worker when button is clicked 
     Cache.install_button.addEventListener('click', function() {
-      if (!Cache.cached) {
-        Cache.installCache();
-      } else {
-        Cache.deleteCache();
-      }
-      setTimeout((function(){location.reload()}), 200); // update to promise
+      if (!Cache.cached) Cache.installCache();
+      else Cache.deleteCache();
     }, false); // false disables default click behavior
 
   // Cee-lo ///////////////////////////////////////////////////////

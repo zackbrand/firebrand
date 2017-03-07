@@ -2,6 +2,7 @@ class CACHE {
   constructor() {
     this.currentCache = "v1";
     this.cached  = false;
+    this.install_button = "";
   }
   checkCache () {
     // Check against cache first
@@ -15,7 +16,6 @@ class CACHE {
         Cache.install_button.textContent = "Uncached";
         Cache.cached = false;
       }
-
     })
   }
   installCache() {
@@ -23,15 +23,16 @@ class CACHE {
       '/'
     ]
     caches.open(Cache.currentCache).then(function(cache) {
-      console.log("SW: Installing initial cache");
-      cache.addAll(filesToCache);
+      cache.addAll(filesToCache).then(function() {
+      location.reload();
+      });
     })
   }
   deleteCache() {
     console.log('Trying to delete cache');
     caches.open(Cache.currentCache).then(function(cache) {
       cache.delete('/').then(function(response) {
-        console.log('Cache deleted');
+        location.reload();
       });
     }).catch(function(error) {
       console.log('Cache delete failed' + error);

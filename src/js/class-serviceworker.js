@@ -3,6 +3,7 @@ class SERVICEWORKER {
     this.path = '/sw.js';
     this.scope = '/';
     this.registered = false;
+    this.register_button = "";
   }
   checkRegistration() {
     navigator.serviceWorker.getRegistration().then(function(reg){
@@ -19,25 +20,27 @@ class SERVICEWORKER {
       console.log('Check registration promise error: ' + error);
     });
   }
-  registerSW() {
-    navigator.serviceWorker.register(SW.path, {scope: SW.scope}).then(function(sw){
-      console.log('Registration succeeded. Scope is ' + sw.scope);
-    }).catch(function(error) {
-      console.log('Registration failed with ' + error);
-    });
-  }
-  unregisterSW() {
-    navigator.serviceWorker.register(SW.path,{scope: SW.scope}).then(function(sw){
-      sw.unregister().then(function(){
-        console.log('Service Worker unregistered');
-      });
-    }).catch(function(error) {
-        console.log('Registration failed with ' + error);
-    });
-  }
   checkControl() {
     if (navigator.serviceWorker.controller) {
       document.querySelector("body").classList.add("sw-controlled");
     }
+  }
+  register() {
+    navigator.serviceWorker.register(SW.path, {scope: SW.scope}).then(function(sw){
+      console.log('Registration succeeded. Scope is ' + sw.scope);
+      location.reload();
+    }).catch(function(error) {
+      console.log('Registration failed with ' + error);
+    });
+  }
+  unregister() {
+    navigator.serviceWorker.register(SW.path,{scope: SW.scope}).then(function(sw){
+      sw.unregister().then(function(){
+        console.log('Service Worker unregistered');
+        location.reload();
+      });
+    }).catch(function(error) {
+        console.log('Registration failed with ' + error);
+    });
   }
 } // End class

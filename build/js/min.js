@@ -2,6 +2,7 @@ class CACHE {
   constructor() {
     this.currentCache = "v1";
     this.cached = false;
+    this.install_button = "";
   }
   checkCache() {
     caches.match('/').then(function (resp) {
@@ -19,15 +20,16 @@ class CACHE {
   installCache() {
     const filesToCache = ['/'];
     caches.open(Cache.currentCache).then(function (cache) {
-      console.log("SW: Installing initial cache");
-      cache.addAll(filesToCache);
+      cache.addAll(filesToCache).then(function () {
+        location.reload();
+      });
     });
   }
   deleteCache() {
     console.log('Trying to delete cache');
     caches.open(Cache.currentCache).then(function (cache) {
       cache.delete('/').then(function (response) {
-        console.log('Cache deleted');
+        location.reload();
       });
     }).catch(function (error) {
       console.log('Cache delete failed' + error);
@@ -126,6 +128,7 @@ class SERVICEWORKER {
     this.path = '/sw.js';
     this.scope = '/';
     this.registered = false;
+    this.register_button = "";
   }
   checkRegistration() {
     navigator.serviceWorker.getRegistration().then(function (reg) {
@@ -142,26 +145,28 @@ class SERVICEWORKER {
       console.log('Check registration promise error: ' + error);
     });
   }
-  registerSW() {
-    navigator.serviceWorker.register(SW.path, { scope: SW.scope }).then(function (sw) {
-      console.log('Registration succeeded. Scope is ' + sw.scope);
-    }).catch(function (error) {
-      console.log('Registration failed with ' + error);
-    });
-  }
-  unregisterSW() {
-    navigator.serviceWorker.register(SW.path, { scope: SW.scope }).then(function (sw) {
-      sw.unregister().then(function () {
-        console.log('Service Worker unregistered');
-      });
-    }).catch(function (error) {
-      console.log('Registration failed with ' + error);
-    });
-  }
   checkControl() {
     if (navigator.serviceWorker.controller) {
       document.querySelector("body").classList.add("sw-controlled");
     }
+  }
+  register() {
+    navigator.serviceWorker.register(SW.path, { scope: SW.scope }).then(function (sw) {
+      console.log('Registration succeeded. Scope is ' + sw.scope);
+      location.reload();
+    }).catch(function (error) {
+      console.log('Registration failed with ' + error);
+    });
+  }
+  unregister() {
+    navigator.serviceWorker.register(SW.path, { scope: SW.scope }).then(function (sw) {
+      sw.unregister().then(function () {
+        console.log('Service Worker unregistered');
+        location.reload();
+      });
+    }).catch(function (error) {
+      console.log('Registration failed with ' + error);
+    });
   }
 }
 
@@ -170,40 +175,22 @@ let Cache = new CACHE();
 let CL = new CEELO();
 
 document.addEventListener("DOMContentLoaded", function (event) {
-
   if ('serviceWorker' in navigator) {
-
     SW.register_button = document.querySelector(".sw-status__register-button");
     SW.checkRegistration();
     SW.checkControl();
 
     SW.register_button.addEventListener('click', function () {
-      if (!SW.registered) {
-        SW.registerSW();
-      } else {
-        SW.unregisterSW();
-      }
-      setTimeout(function () {
-        location.reload();
-      }, 200);
+      if (!SW.registered) SW.register();else SW.unregister();
     }, false);
   } else {
     alert("Service Workers not supported!");
   }
-
   Cache.install_button = document.querySelector(".cache-status__install-button");
-
   Cache.checkCache();
 
   Cache.install_button.addEventListener('click', function () {
-    if (!Cache.cached) {
-      Cache.installCache();
-    } else {
-      Cache.deleteCache();
-    }
-    setTimeout(function () {
-      location.reload();
-    }, 200);
+    if (!Cache.cached) Cache.installCache();else Cache.deleteCache();
   }, false);
   CL.setPoint = document.querySelector(".set-point");
   CL.dice = document.querySelector(".dice");
