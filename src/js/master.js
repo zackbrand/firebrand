@@ -1,7 +1,7 @@
 // Instantiate classes
 let SW    = new SERVICEWORKER;
 let Cache = new CACHE;
-let CL    = new CEELO;
+let Ceelo    = new CEELO;
 
 // Once DOM has loaded
 document.addEventListener("DOMContentLoaded", function(event) { 
@@ -39,18 +39,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
   // Cee-lo ///////////////////////////////////////////////////////
 
     // Setup
-    CL.setPoint = document.querySelector(".set-point");
-    CL.dice     = document.querySelector(".dice");
-    CL.roll     = document.querySelector(".roll");
+    Ceelo.setPoint = document.querySelector(".set-point");
+    Ceelo.dice     = document.querySelector(".dice");
+    Ceelo.roll     = document.querySelector(".roll");
 
-    CL.createDice();
-    CL.allDice  = document.getElementsByClassName("dice__die");
+    Ceelo.createDice();
+    Ceelo.allDice  = document.getElementsByClassName("dice__die");
 
     // Roll dice when button is clicked 
-    CL.roll.addEventListener('click', function() {
-      CL.rollResults          = CL.rollDice();
-      CL.matches              = CL.findMatches();
-      CL.setPoint.textContent = CL.determineResults();
+    Ceelo.roll.addEventListener('click', function() {
+      Ceelo.rollResults          = Ceelo.rollDice();
+      Ceelo.matches              = Ceelo.findMatches();
+      Ceelo.setPoint.textContent = Ceelo.determineResults();
     }, false); // false disables default click behavior
 
 });
