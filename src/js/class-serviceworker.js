@@ -3,7 +3,6 @@ class SERVICEWORKER {
     this.path = '/sw.js';
     this.scope = '/';
     this.registered = false;
-    this.swControlled = false;
   }
   checkRegistration() {
     navigator.serviceWorker.getRegistration().then(function(reg){
@@ -37,5 +36,10 @@ class SERVICEWORKER {
     }).catch(function(error) {
         console.log('Registration failed with ' + error);
     });
+  }
+  checkControl() {
+    if (navigator.serviceWorker.controller) {
+      document.querySelector("body").classList.add("sw-controlled");
+    }
   }
 } // End class

@@ -11,13 +11,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     if ('serviceWorker' in navigator) {
 
-      SW.controlled = document.querySelector(".sw-status__controlled");
       SW.register_button   = document.querySelector(".sw-status__register-button");
-      SW.unregister = document.querySelector(".sw-status__unregister");
       SW.checkRegistration();
-      SW.controlled.textContent = "Controlled: "+navigator.serviceWorker.controller;
-
-      // Install service worker when button is clicked 
+      SW.checkControl();
+      // Register / unregister service worker when button is clicked 
       SW.register_button.addEventListener('click', function() {
         if (!SW.registered) {
           SW.registerSW();

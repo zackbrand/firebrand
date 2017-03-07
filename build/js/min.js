@@ -126,7 +126,6 @@ class SERVICEWORKER {
     this.path = '/sw.js';
     this.scope = '/';
     this.registered = false;
-    this.swControlled = false;
   }
   checkRegistration() {
     navigator.serviceWorker.getRegistration().then(function (reg) {
@@ -161,6 +160,11 @@ class SERVICEWORKER {
       console.log('Registration failed with ' + error);
     });
   }
+  checkControl() {
+    if (navigator.serviceWorker.controller) {
+      document.querySelector("body").classList.add("sw-controlled");
+    }
+  }
 }
 
 let SW = new SERVICEWORKER();
@@ -171,11 +175,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
   if ('serviceWorker' in navigator) {
 
-    SW.controlled = document.querySelector(".sw-status__controlled");
     SW.register_button = document.querySelector(".sw-status__register-button");
-    SW.unregister = document.querySelector(".sw-status__unregister");
     SW.checkRegistration();
-    SW.controlled.textContent = "Controlled: " + navigator.serviceWorker.controller;
+    SW.checkControl();
 
     SW.register_button.addEventListener('click', function () {
       if (!SW.registered) {
