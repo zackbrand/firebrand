@@ -3,8 +3,22 @@ class CACHE {
     this.path = '/sw.js';
     this.scope = '/';
     this.currentCache = "v1";
-    this.swCache      = false;
-    this.swInstall    = "";
+    this.cached  = false;
+  }
+  checkCache () {
+    // Check against cache first
+    caches.match('/').then(function(resp) {
+      if (resp) {
+        Cache.install_button.classList.add("cache-status__install--true")
+        Cache.install_button.textContent = "Cached";
+        Cache.cached = true;
+      } else {  
+        Cache.install_button.classList.add("cache-status__install--false")
+        Cache.install_button.textContent = "Uncached";
+        Cache.cached = false;
+      }
+
+    })
   }
   installCache() {
     const filesToCache = [
@@ -12,21 +26,8 @@ class CACHE {
     ]
     caches.open(Cache.currentCache).then(function(cache) {
       console.log("SW: Installing initial cache");
-      return cache.addAll(filesToCache);
-    })
-  }
-  checkCache () {
-    // Check against cache first
-    caches.match('/').then(function(resp) {
-      console.log(resp);
-      if (resp) {
-        console.log("Cache True");
-        Cache.cache.textContent = "Cache: matched";
-      } else {
-        console.log("Cache False");
-        Cache.cache.textContent = "Cache: false";   
-      }
-
+      cache.addAll(filesToCache);
+      setTimeout((function(){location.reload()}), 200); // update to promise
     })
   }
   deleteCache() {
@@ -34,6 +35,7 @@ class CACHE {
     caches.open(Cache.currentCache).then(function(cache) {
       cache.delete('/').then(function(response) {
         console.log('Cache deleted');
+        setTimeout((function(){location.reload()}), 200); // update to promise
       });
     }).catch(function(error) {
       console.log('Cache delete failed' + error);
@@ -44,7 +46,7 @@ class CACHE {
     caches.keys().then(function(keyList) {
       return Promise.all(keyList.map(function(key) {
         if (cacheWhitelist.indexOf(key) === -1) {
-          console.log("SW: Deleting old cache");
+          //console.log("SW: Deleting old cache");
           return caches.delete(key);
         }
       }));

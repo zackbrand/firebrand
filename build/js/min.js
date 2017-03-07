@@ -3,26 +3,29 @@ class CACHE {
     this.path = '/sw.js';
     this.scope = '/';
     this.currentCache = "v1";
-    this.swCache = false;
-    this.swInstall = "";
+    this.cached = false;
+  }
+  checkCache() {
+    caches.match('/').then(function (resp) {
+      if (resp) {
+        Cache.install_button.classList.add("cache-status__install--true");
+        Cache.install_button.textContent = "Cached";
+        Cache.cached = true;
+      } else {
+        Cache.install_button.classList.add("cache-status__install--false");
+        Cache.install_button.textContent = "Uncached";
+        Cache.cached = false;
+      }
+    });
   }
   installCache() {
     const filesToCache = ['/'];
     caches.open(Cache.currentCache).then(function (cache) {
       console.log("SW: Installing initial cache");
-      return cache.addAll(filesToCache);
-    });
-  }
-  checkCache() {
-    caches.match('/').then(function (resp) {
-      console.log(resp);
-      if (resp) {
-        console.log("Cache True");
-        Cache.cache.textContent = "Cache: matched";
-      } else {
-        console.log("Cache False");
-        Cache.cache.textContent = "Cache: false";
-      }
+      cache.addAll(filesToCache);
+      setTimeout(function () {
+        location.reload();
+      }, 200);
     });
   }
   deleteCache() {
@@ -30,6 +33,9 @@ class CACHE {
     caches.open(Cache.currentCache).then(function (cache) {
       cache.delete('/').then(function (response) {
         console.log('Cache deleted');
+        setTimeout(function () {
+          location.reload();
+        }, 200);
       });
     }).catch(function (error) {
       console.log('Cache delete failed' + error);
@@ -40,7 +46,6 @@ class CACHE {
     caches.keys().then(function (keyList) {
       return Promise.all(keyList.map(function (key) {
         if (cacheWhitelist.indexOf(key) === -1) {
-          console.log("SW: Deleting old cache");
           return caches.delete(key);
         }
       }));
@@ -169,48 +174,47 @@ let CL = new CEELO();
 
 document.addEventListener("DOMContentLoaded", function (event) {
 
-    if ('serviceWorker' in navigator) {
-        SW.registered = document.querySelector(".sw-status__registered");
-        SW.controlled = document.querySelector(".sw-status__controlled");
-        SW.register = document.querySelector(".sw-status__register");
-        SW.unregister = document.querySelector(".sw-status__unregister");
+  if ('serviceWorker' in navigator) {
 
-        SW.checkRegistration();
-        console.log(SW.swRegistered);
-        SW.controlled.textContent = "Controlled: " + navigator.serviceWorker.controller;
+    SW.registered = document.querySelector(".sw-status__registered");
+    SW.controlled = document.querySelector(".sw-status__controlled");
+    SW.register = document.querySelector(".sw-status__register");
+    SW.unregister = document.querySelector(".sw-status__unregister");
+    SW.checkRegistration();
+    SW.controlled.textContent = "Controlled: " + navigator.serviceWorker.controller;
 
-        SW.register.addEventListener('click', function () {
-            SW.registerSW();
-        }, false);
-        SW.unregister.addEventListener('click', function () {
-            SW.unregisterSW();
-        }, false);
+    SW.register.addEventListener('click', function () {
+      SW.registerSW();
+    }, false);
+    SW.unregister.addEventListener('click', function () {
+      SW.unregisterSW();
+    }, false);
+  } else {
+    alert("Service Workers not supported!");
+  }
+
+  Cache.cache_button = document.querySelector(".cache-status__cache");
+  Cache.install_button = document.querySelector(".cache-status__install-button");
+
+  Cache.checkCache();
+
+  Cache.install_button.addEventListener('click', function () {
+    if (!Cache.cached) {
+      Cache.installCache();
     } else {
-        alert("Service Workers not supported!");
+      Cache.deleteCache();
     }
+  }, false);
+  CL.setPoint = document.querySelector(".set-point");
+  CL.dice = document.querySelector(".dice");
+  CL.roll = document.querySelector(".roll");
 
-    Cache.cache = document.querySelector(".cache-status__cache");
-    Cache.install = document.querySelector(".cache-status__install");
-    Cache.delete = document.querySelector(".cache-status__delete");
+  CL.createDice();
+  CL.allDice = document.getElementsByClassName("dice__die");
 
-    Cache.checkCache();
-
-    Cache.install.addEventListener('click', function () {
-        Cache.installCache();
-    }, false);
-    Cache.delete.addEventListener('click', function () {
-        Cache.deleteCache();
-    }, false);
-    CL.setPoint = document.querySelector(".set-point");
-    CL.dice = document.querySelector(".dice");
-    CL.roll = document.querySelector(".roll");
-
-    CL.createDice();
-    CL.allDice = document.getElementsByClassName("dice__die");
-
-    CL.roll.addEventListener('click', function () {
-        CL.rollResults = CL.rollDice();
-        CL.matches = CL.findMatches();
-        CL.setPoint.textContent = CL.determineResults();
-    }, false);
+  CL.roll.addEventListener('click', function () {
+    CL.rollResults = CL.rollDice();
+    CL.matches = CL.findMatches();
+    CL.setPoint.textContent = CL.determineResults();
+  }, false);
 });

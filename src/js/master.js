@@ -11,14 +11,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     if ('serviceWorker' in navigator) {
 
-      // Setup
       SW.registered = document.querySelector(".sw-status__registered");
       SW.controlled = document.querySelector(".sw-status__controlled");
       SW.register   = document.querySelector(".sw-status__register");
       SW.unregister = document.querySelector(".sw-status__unregister");
-
       SW.checkRegistration();
-      console.log(SW.swRegistered);
       SW.controlled.textContent = "Controlled: "+navigator.serviceWorker.controller;
 
       // Install service worker when button is clicked 
@@ -37,20 +34,18 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   // Cache ////////////////////////////////////////////////////////
 
-    Cache.cache   = document.querySelector(".cache-status__cache");
-    Cache.install = document.querySelector(".cache-status__install");
-    Cache.delete  = document.querySelector(".cache-status__delete");
+    Cache.cache_button = document.querySelector(".cache-status__cache");
+    Cache.install_button = document.querySelector(".cache-status__install-button");
 
     Cache.checkCache();
 
     // Install service worker when button is clicked 
-    Cache.install.addEventListener('click', function() {
-      Cache.installCache();
-    }, false); // false disables default click behavior
-
-    // Install service worker when button is clicked 
-    Cache.delete.addEventListener('click', function() {
-      Cache.deleteCache();
+    Cache.install_button.addEventListener('click', function() {
+      if (!Cache.cached) {
+        Cache.installCache();
+      } else {
+        Cache.deleteCache();
+      }
     }, false); // false disables default click behavior
 
   // Cee-lo ///////////////////////////////////////////////////////
