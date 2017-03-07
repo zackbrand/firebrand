@@ -9,11 +9,10 @@ class CEELO {
     this.allDice = "";
   }
   createDice(amount = 3) {
-    // Load placeholder dice into DOM
     for (let index = 0; index < amount; index++) {
       const dieDiv = document.createElement("div");
       dieDiv.classList.add("dice__die");
-      dieDiv.classList.add("dice__die-" + (index + 1)); // dice_die-1, etc
+      dieDiv.classList.add("dice__die-" + (index + 1));
       const placeholderContent = document.createTextNode("6");
       dieDiv.appendChild(placeholderContent);
       CL.dice.appendChild(dieDiv);
@@ -21,44 +20,37 @@ class CEELO {
   }
   rollDice() {
     console.log("rolling dice");
-    // Roll each die and put the results into an array
+
     let rollResults = [];
     Array.prototype.forEach.call(CL.allDice, function (die) {
       const rollResult = Math.floor(Math.random() * 6 + 1);
       die.textContent = rollResult;
-      // push each result to an array
+
       rollResults.push(rollResult);
     });
     return rollResults;
   }
   findMatches() {
-    // Sort results so matches will be adjacent
     let sortedRolls = CL.rollResults.slice().sort();
 
-    // Clone results into an array of potential set points
     CL.potentialPoints = sortedRolls.slice();
 
-    // Find matches by comparing each result
     let matches = [];
     for (let i = 0; i < CL.rollResults.length - 1; i++) {
       if (sortedRolls[i] == sortedRolls[i + 1]) {
-        // count each match by pushing it to the matches array
         matches.push(sortedRolls[i]);
-        // exclude the match from potential set points
+
         CL.potentialPoints.splice(i, 2);
       }
     }
     return matches;
   }
   determineResults() {
-    // Results from checking for matches
     const rolledDoubles = CL.matches[0];
     const rolledTriples = CL.matches[1];
     if (rolledTriples) {
-      //alert("You Win!")
       CL.dice.classList.add("dice--win");
     } else if (rolledDoubles) {
-      // the single will be the remaining potential point
       const single = CL.potentialPoints[0];
       CL.dice.classList.add("dice--pair");
       CL.dice.classList.remove("dice--win");
@@ -69,7 +61,7 @@ class CEELO {
       return pointMax;
     }
   }
-} // End class CEELO
+}
 class SERVICEWORKER {
   constructor() {
     this.path = '/sw.js';
@@ -118,7 +110,6 @@ class SERVICEWORKER {
     });
   }
   checkCache() {
-    // Check against cache first
     caches.match('/').then(function (resp) {
       console.log(resp);
       if (resp) {
@@ -152,40 +143,26 @@ class SERVICEWORKER {
     });
   }
   fetchCache() {
-    // Intercept asset requests
-    event.respondWith(
-
-    // Check against cache first
-    caches.match(event.request).then(function (resp) {
+    event.respondWith(caches.match(event.request).then(function (resp) {
 
       if (resp) console.log("SW: Resource loaded from cache");
-      return resp || // If that isnt truthy 
-
-      // Then fetch from the network
-      fetch(event.request).then(function (response) {
+      return resp || fetch(event.request).then(function (response) {
         console.log("SW: Requested resource not yet cached, caching now");
         return caches.open(currentCache).then(function (cache) {
-          // Add newly found content to the cache
           cache.put(event.request, response.clone());
           return response;
         });
       });
-    })); // End respondWith    
+    }));
   }
-} // End class
+}
 
-// Instantiate classes
 let SW = new SERVICEWORKER();
 let CL = new CEELO();
 
-// Once DOM has loaded
 document.addEventListener("DOMContentLoaded", function (event) {
 
-  // SW Status ///////////////////////////////////////////////
-
   if ('serviceWorker' in navigator) {
-
-    // Setup
     SW.registered = document.querySelector(".sw-status__registered");
     SW.cache = document.querySelector(".sw-status__cache");
     SW.controlled = document.querySelector(".sw-status__controlled");
@@ -200,33 +177,21 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     SW.checkCache();
 
-    // Install service worker when button is clicked 
     SW.register.addEventListener('click', function () {
       SW.registerSW();
-    }, false); // false disables default click behavior
-
-    // Install service worker when button is clicked 
+    }, false);
     SW.unregister.addEventListener('click', function () {
       SW.unregisterSW();
-    }, false); // false disables default click behavior
-
-    // Install service worker when button is clicked 
+    }, false);
     SW.install.addEventListener('click', function () {
       SW.installCache();
-    }, false); // false disables default click behavior
-
-    // Install service worker when button is clicked 
+    }, false);
     SW.delete.addEventListener('click', function () {
       SW.deleteCache();
-    }, false); // false disables default click behavior
+    }, false);
   } else {
     alert("Service Workers not supported!");
-  } // End if ('serviceWorker' in navigator)
-
-  ////////////////////////////////////////////////////////////
-
-  // Cee-lo //////////////////////////////////////////////////
-  // Setup
+  }
   CL.setPoint = document.querySelector(".set-point");
   CL.dice = document.querySelector(".dice");
   CL.roll = document.querySelector(".roll");
@@ -234,11 +199,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
   CL.createDice();
   CL.allDice = document.getElementsByClassName("dice__die");
 
-  // Roll dice when button is clicked 
   CL.roll.addEventListener('click', function () {
     CL.rollResults = CL.rollDice();
     CL.matches = CL.findMatches();
     CL.setPoint.textContent = CL.determineResults();
-  }, false); // false disables default click behavior
-  ////////////////////////////////////////////////////////////
+  }, false);
 });
