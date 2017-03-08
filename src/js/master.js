@@ -1,7 +1,7 @@
 // Instantiate classes
 let SW    = new SERVICEWORKER;
 let Cache = new CACHE;
-let Ceelo    = new CEELO;
+let Ceelo = new CEELO;
 
 // Once DOM has loaded
 document.addEventListener("DOMContentLoaded", function(event) { 
