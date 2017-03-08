@@ -1,5 +1,5 @@
 // Instantiate classes
-let SW    = new SERVICEWORKER;
+let SWH   = new SW_HELPER;
 let Cache = new CACHE;
 let Ceelo = new CEELO;
 
@@ -10,14 +10,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     if ('serviceWorker' in navigator) {
 
       // Setup
-      SW.register_button = document.querySelector(".sw-status__register-button");
-      SW.checkRegistration();
-      SW.checkControl();
+      SWH.register_button = document.querySelector(".sw-status__register-button");
+      SWH.checkRegistration();
+      SWH.checkControl();
       
       // Register / unregister service worker when button is clicked 
-      SW.register_button.addEventListener('click', function() {
-        if (!SW.registered) SW.register();
-        else SW.unregister();
+      SWH.register_button.addEventListener('click', function() {
+        if (!SWH.registered) SWH.register();
+        else SWH.unregister();
       }, false); // false disables default click behavior
 
     } else {
