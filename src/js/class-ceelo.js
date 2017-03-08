@@ -1,12 +1,12 @@
 class CEELO {
   constructor(){
-    this.rollResults = "";
-    this.matches = "";
+    this.rollResults     = "";
+    this.matches         = "";
     this.potentialPoints = "";
-    this.dice = "";
-    this.setPoint = "";
-    this.roll = "";
-    this.allDice = "";
+    this.dice            = "";
+    this.setPoint        = "";
+    this.roll            = "";
+    this.allDice         = "";
   }
   createDice (amount = 3) {
     // Load placeholder dice into DOM

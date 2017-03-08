@@ -22,7 +22,7 @@
     "watch:js": "watch \"babel src/js/*.js -o build/js/min.js --presets=babili,es2015\" src/js --interval=0.1",
     "watch:img": "watch \"imagemin ./src/images/* --out-dir=./build/images/ && imagemin ./src/images/icons/* --out-dir=./build/images/icons/ && imagemin ./src/images/icons/* --out-dir=./public/images/icons/\" src/images --interval=1",
     "watch:html": "watch \"html-minifier --collapse-whitespace --conservative-collapse --input-dir ./src/html/ --output-dir ./build\" src/html --interval=0.1",
-    "watch:sw": "watch \"uglifyjs src/sw/sw.js -o build/sw.js && uglifyjs src/sw/sw.js -o public/sw.js\" src/sw --interval=0.1",
+    "watch:sw": "watch \"babel src/sw/sw.js -o build/sw.js --presets=babili && babel src/sw/sw.js -o public/sw.js --presets=babili\" src/sw --interval=0.1",
     "watch:manifest": "watch \" cpy src/manifest/manifest.json build && cpy src/manifest/manifest.json public \" src/manifest --interval=0.1",
     "inline": "inliner ./build/index.html > ./public/index.html && inliner ./build/404.html > ./public/404.html",
     "serve": "light-server -s ./build -p 7000 -w \"./build/** # echo reloaded\" --interval 100",
