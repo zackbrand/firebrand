@@ -39,9 +39,8 @@ class SERVICEWORKER {
   }
 } // End class
 
-let SW = new SERVICEWORKER;
-
 // Setup /////////////////////////
+let SW = new SERVICEWORKER;
 
 // Install ///////////////////////
   this.addEventListener('install', function(event) {
@@ -57,4 +56,3 @@ let SW = new SERVICEWORKER;
   this.addEventListener('fetch', function(event) {
     SW.fetch(event);
   });
-
