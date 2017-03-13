@@ -44,39 +44,47 @@
       <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
       <!-- Define Icons -->
-      <link rel="apple-touch-icon-precomposed" sizes="192x192" href="images/icons/icon192.png">
+      <link rel="apple-touch-icon" sizes="192x192" href="images/icons/icon192.png">
 
   </head>
 
   <body>
 
-    <section class="sw-status message">
-      <h2>Service Worker Status</h2>
-      <ul>
-        <li><a class="sw-status__register-button" href="#"></a></li>
-      </ul>
+    <noscript>
+      <style>.wrap {opacity: 0.3;}</style>
+      <h2 class="noscript">JavaScript is required but is not enabled</h2>
+    </noscript>
 
-    </section>
+    <div class="wrap">
 
-    <section class="cache-status message">
-      <h2>Cache Status</h2>
-      <ul>
-        <li><a class="cache-status__install-button" href="#"></a></li>
-      </ul>
+      <section class="sw-status message">
+        <h2>Service Worker Status</h2>
+        <ul>
+          <li><a class="sw-status__register-button" href="">Unregistered</a></li>
+        </ul>
 
-    </section>
+      </section>
 
-    <section class="cee-lo message">
-      <h2>Cee-lo</h2>
-      <div class="dice"></div>
-      <br>
-      <ul>
-        <li><a class="roll" href="#">Roll</a></li>
-      </ul>
-      <div class="set-point">SP</div>
-    </section>
+      <section class="cache-status message">
+        <h2>Cache Status</h2>
+        <ul>
+          <li><a class="cache-status__install-button" href="">Uncached</a></li>
+        </ul>
 
-  </div>
+      </section>
+
+      <section class="cee-lo message">
+        <h2>Cee-lo</h2>
+        <div class="dice"></div>
+        <br>
+        <ul>
+          <li><a class="roll" href="">Roll</a></li>
+        </ul>
+        <div class="set-point">SP</div>
+      </section>
+
+    </div>
+
   </body>
   
 </html>

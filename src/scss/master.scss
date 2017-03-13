@@ -2,13 +2,20 @@ $firegrey: #ECEFF1;
 $firered: #e50303;
 $mainFonts: Roboto, Arial, sans-serif;
 
+.noscript{
+  text-align: center;
+  color:#652323;
+  background: #f1f39b;
+  margin:0;
+  padding:5px;
+}
+
 body {
   font-family: $mainFonts;
   background: $firegrey url(../images/bg-pattern.png);
   color: rgba(0,0,0,0.87);
   margin: 0;
   box-sizing: border-box;
-  border-top: 5px solid $firered;
 }
 body.sw-controlled {
   border-color: green;
@@ -17,6 +24,9 @@ a {
   color: rgb(3,155,229);
 }
 
+.wrap {
+  border-top: 5px solid $firered;
+}
 
 .message {
   width: 300px;
