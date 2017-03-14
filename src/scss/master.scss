@@ -3,12 +3,24 @@ $firered: #e50303;
 $fireblue: #039be5;
 $mainFonts: Roboto, Arial, sans-serif;
 
-.noscript{
+.noscript,
+.sw-warning h1 {
   text-align: center;
   color:#652323;
   background: #f1f39b;
   margin:0;
   padding:5px;
+}
+.sw-warning {
+  display: none;
+}
+
+.sw-warning--triggered {
+  display: block;
+}
+
+.sw-unsupported {
+  opacity: 0.3; 
 }
 
 body {

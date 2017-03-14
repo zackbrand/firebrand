@@ -6,8 +6,10 @@ let Ceelo = new CEELO;
 // Once DOM has loaded
 document.addEventListener("DOMContentLoaded", function(event) { 
 
-  // Service Worker ///////////////////////////////////////////////
-    if ('serviceWorker' in navigator) {
+  // If browser supports service workers
+  if ('serviceWorker' in navigator) {
+  
+    // Service Worker ///////////////////////////////////////////////
 
       // Setup
       SWH.register_button = document.querySelector(".sw-status__register-button");
@@ -20,21 +22,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
         else SWH.unregister();
       }, false); // false disables default click behavior
 
-    } else {
-      alert("Service Workers not supported!");
-    } // End if ('serviceWorker' in navigator)
+    // Cache ////////////////////////////////////////////////////////
+       
+       // Setup
+      Cache.install_button = document.querySelector(".cache-status__install-button");
+      Cache.check();
 
-  // Cache ////////////////////////////////////////////////////////
-   
-     // Setup
-    Cache.install_button = document.querySelector(".cache-status__install-button");
-    Cache.check();
+      // Install service worker when button is clicked 
+      Cache.install_button.addEventListener('click', function() {
+        if (!Cache.cached) Cache.install();
+        else Cache.delete();
+      }, false); // false disables default click behavior
 
-    // Install service worker when button is clicked 
-    Cache.install_button.addEventListener('click', function() {
-      if (!Cache.cached) Cache.install();
-      else Cache.delete();
-    }, false); // false disables default click behavior
+  } else { // If browser does not support service workers
+    //alert("Service Workers not supported!");
+    document.querySelector(".sw-warning").classList.add("sw-warning--triggered");
+    document.querySelector(".sw-status").classList.add("sw-unsupported");
+    document.querySelector(".cache-status").classList.add("sw-unsupported");
+  } // End if ('serviceWorker' in navigator)
 
   // Cee-lo ///////////////////////////////////////////////////////
 
