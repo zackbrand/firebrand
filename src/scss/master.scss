@@ -30,15 +30,15 @@ body {
   margin: 0;
   box-sizing: border-box;
 }
-body.sw-controlled {
-  border-color: green;
-}
 a {
   color: rgb(3,155,229);
 }
 
 .wrap {
   border-top: 5px solid $firered;
+  &.sw-controlled {
+    border-color: green;
+  }
 }
 
 .message {

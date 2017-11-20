@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // Service Worker ///////////////////////////////////////////////
 
       // Setup
+      SWH.wrap = document.querySelector(".wrap");
       SWH.register_button = document.querySelector(".sw-status__register-button");
       SWH.checkRegistration();
       SWH.checkControl();
