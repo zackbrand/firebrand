@@ -3,6 +3,21 @@ let SWH   = new SW_HELPER;
 let Cache = new CACHE;
 let Ceelo = new CEELO;
 
+// Once DOM has loaded
+document.addEventListener("DOMContentLoaded", function(){
+
+  // If browser supports service workers
+  if ('serviceWorker' in navigator) {
+    swButtonActions();
+    cacheButtonActions();
+  } 
+  else showSupportWarnings();
+
+  // Add Cee-Lo game
+  ceeLo();
+
+}); // end DOMContentLoaded
+
 function swButtonActions() {
   // Setup
   SWH.wrap = document.querySelector(".wrap");
@@ -55,18 +70,3 @@ function ceeLo() {
   // Roll dice when button is clicked 
   Ceelo.roll.addEventListener('click', rollDice);
 }
-
-// Once DOM has loaded
-document.addEventListener("DOMContentLoaded", function(){
-
-  // If browser supports service workers
-  if ('serviceWorker' in navigator) {
-    swButtonActions();
-    cacheButtonActions();
-  } 
-  else showSupportWarnings();
-
-  // Add Cee-Lo game
-  ceeLo();
-
-}); // end DOMContentLoaded
