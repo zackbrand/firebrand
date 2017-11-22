@@ -5,30 +5,27 @@ class SW_HELPER {
     this.registered = false;
     this.sw = navigator.serviceWorker;
     this.wrap = "";
-    this.register_button = "";
-  }
-  isRegistered() {
-    console.log("Service Worker registered");
-    SWH.register_button.classList.add("sw-status__registered--true")
-    SWH.register_button.textContent = "Registered";
-    SWH.registered = true;
-  }
-  isNotRegistered() {
-    console.log("Service Worker not registered");
-    SWH.register_button.classList.add("sw-status__registered--false")
-    SWH.register_button.textContent = "Unregistered";
-    SWH.registered = false;
+    this.registerButton = "";
   }
   checkRegistration() {
-    let getStatus = this.sw.getRegistration();
-    let statusResolved = registration => {
-      if (registration) this.isRegistered();
-      else this.isNotRegistered();
+    // Setup
+    let regStatus = this.sw.getRegistration();
+    let regResolved = registration => {
+      if (registration) {
+        console.log("Service Worker registered");
+        this.registerButton.classList.add("sw-status__registered--true");
+        this.registerButton.textContent = "Registered";
+        this.registered = true;
+      } else {
+        console.log("Service Worker not registered");
+        this.registerButton.classList.add("sw-status__registered--false");
+        this.registerButton.textContent = "Unregistered";
+        this.registered = false;
+      }
     }
-    let statusError = reason => {
-      console.log('Check registration promise error: '+reason);
-    }
-    getStatus.then(statusResolved,statusError);
+    let regRejected = reason => console.log('Registration rejected: '+reason);
+    // Actions
+    regStatus.then(regResolved,regRejected);
   }
   checkControl() {
     if (this.sw.controller) {
@@ -37,14 +34,12 @@ class SW_HELPER {
   }
   register(unregister) {
     let registration = this.sw.register(this.path, {scope: this.scope});
-    let registrationResolved = registration => {
+    let regResolved = registration => {
       if (unregister) registration.unregister();
       location.reload();
     }
-    let registrationError = reason => {
-      console.log('Registration failed with: '+reason);
-    }
-    registration.then(registrationResolved,registrationError);
+    let regRejected = reason => console.log('Registration rejected: '+reason);
+    registration.then(regResolved,regRejected);
   }
   unregister() {
     this.register("unregister");
